@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flask Project Presentation</title>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+    <script rel="script" type="javascript" src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>
+</head>
+<body style="width: 100%; height=100%;margin:0 0 0 0;overflow:scroll;">
+{#    <nav class="navbar" style="border-radius: 0;">#}
+    <nav class="navbar navbar-inverse" style="border-radius: 0;">
+  		<div class="container-fluid">
+    			<div class="navbar-header">
+      			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        				<span class="icon-bar"></span>
+        				<span class="icon-bar"></span>
+        				<span class="icon-bar"></span>
+      			</button>
+      			<a class="navbar-brand" href="/" style="color:#FFFFFF;">Team Slytherin</a>
+    			</div>
+    		<div class="collapse navbar-collapse" id="myNavbar">
+      		<ul class="nav navbar-nav navbar-right">
+        			<li id="nav_home"><a href="/">Home</a></li>
+        			<li id="nav_bug1"><a href="/bug1">Bug1</a></li>
+        			<li id="nav_bug2"><a href="/bug2">Bug2</a></li>
+        			<li id="nav_bug3"><a href="/bug3">Bug3</a></li>
+        			<li id="nav_enhancement"><a href="/enhancement">Enhancement</a></li>
+                    <li id="nav_summary"><a href="/summary">Summary</a></li>
+
+      		</ul>
+
+    		</div>
+  		</div>
+	</nav>
+<div class="container">
+    {% block body %}{% endblock %}
+</div>
+
+</body>
+</html>
