@@ -1,4 +1,211 @@
 {% extends "template.html" %}
 {% block body %}
-  bug2
+    <div class="row">
+        <h1><a href="https://github.com/pallets/flask/issues/331">static file would not send to browser correctly
+            <strong>#331</strong></a></h1>
+
+        <div>
+            <h2>What is the bug?</h2>
+          <pre><code class="python">
+              #!/usr/bin/env python
+              # -*- coding: utf-8 -*-
+              from flask import Flask, render_template
+              import os
+              import os.path
+
+              app = Flask(__name__)
+
+              @app.route('/')
+              def index():
+              return render_template('index.html')
+
+              @app.route('/&#60;arg1&#62;/&#60;arg2&#62;/&#60;arg3&#62;/')
+              def arg3(arg1, arg2, arg3):
+              return arg1 + " " + arg2 + " " + arg3
+
+          </code></pre>
+
+
+            <p>Default behavior that sends static file to browser</p>
+
+            <p><a href="/static/style.css/">/static/style.css/</a></p>
+
+            <p>After adding a routing rule, when the url is not a static file</p>
+
+            <p><a href="/1/2/3/">/1/2/3/</a></p>
+
+            <p>After adding a routing rule, when the url is a static file</p>
+
+            <p><a href="/static/jquery/jquery.js/">/static/jquery/jquery.js/</a></p>
+        </div>
+
+
+        <div>
+            <h2>Concept Location</h2>
+            <code>grep -r "route" *</code>
+
+            <p>366 results</p>
+
+            <pre><code class="terminal">
+                flask/app.py: #: To register a view function, use the :meth:`route` decorator.
+                flask/app.py: #: but before any routes are connected. Example::
+                flask/app.py: """Connects a URL rule. Works exactly like the :meth:`route`
+                flask/app.py: @app.route('/')
+                flask/app.py: Internally :meth:`route` invokes :meth:`add_url_rule` so if you want
+                flask/app.py: For more information refer to :ref:`url-route-registrations`.
+                flask/app.py: 'for example: @app.route(..., methods=["POST"])')
+                flask/app.py: def route(self, rule, **options):
+                flask/app.py: @app.route('/')
+                flask/app.py: For more information refer to :ref:`url-route-registrations`.
+                flask/app.py: def weighted_route(self, *args, **kwargs):
+                flask/app.py: # register view_func with route
+                flask/app.py: self.route(*args, **kwargs)(view_func)
+            </code></pre>
+
+            <br>
+
+            <code>grep -r "add_url_rule" *</code>
+
+            <p>83 results</p>
+
+            <pre><code class="terminal">
+                flask/app.py: #: :meth:`add_url_rule`. Defaults to :class:`werkzeug.routing.Rule`.
+                flask/app.py: self.add_url_rule(self.static_url_path + '/&#60;path:filename&#62;',
+                flask/app.py: def add_url_rule(self, rule, endpoint=None, view_func=None, **options):
+                flask/app.py: app.add_url_rule('/', 'index', index)
+                flask/app.py: Internally :meth:`route` invokes :meth:`add_url_rule` so if you want
+                flask/app.py: given URL rule. This does the same thing as :meth:`add_url_rule`
+                flask/app.py: self.add_url_rule(rule, endpoint, f, **options)
+            </code></pre>
+
+{#            <pre><code class="python">#}
+{#                def add_url_rule(self, rule, endpoint=None, view_func=None, **options):#}
+{##}
+{#                    if endpoint is None:#}
+{#                        endpoint = _endpoint_from_view_func(view_func)#}
+{#                        options['endpoint'] = endpoint#}
+{#                        methods = options.pop('methods', None)#}
+{##}
+{#                    # if the methods are not given and the view_func object knows its#}
+{#                    # methods we can use that instead. If neither exists, we go with#}
+{#                    # a tuple of only ``GET`` as default.#}
+{#                    if methods is None:#}
+{#                        methods = getattr(view_func, 'methods', None) or ('GET',)#}
+{#                    if isinstance(methods, string_types):#}
+{#                        raise TypeError('Allowed methods have to be iterables of strings, '#}
+{#                    'for example: @app.route(..., methods=["POST"])')#}
+{#                    methods = set(item.upper() for item in methods)#}
+{##}
+{#                    # Methods that should always be added#}
+{#                    required_methods = set(getattr(view_func, 'required_methods', ()))#}
+{##}
+{#                    # starting with Flask 0.8 the view_func object can disable and#}
+{#                    # force-enable the automatic options handling.#}
+{#                    provide_automatic_options = getattr(view_func,'provide_automatic_options', None)#}
+{##}
+{#                    if provide_automatic_options is None:#}
+{#                        if 'OPTIONS' not in methods:#}
+{#                            provide_automatic_options = True#}
+{#                            required_methods.add('OPTIONS')#}
+{#                        else:#}
+{#                            provide_automatic_options = False#}
+{##}
+{#                    # Add the required methods now.#}
+{#                    methods |= required_methods#}
+{##}
+{#                    rule = self.url_rule_class(rule, methods=methods, **options)#}
+{#                    rule.provide_automatic_options = provide_automatic_options#}
+{##}
+{#                    self.url_map.add(rule)#}
+{#                    if view_func is not None:#}
+{#                        old_func = self.view_functions.get(endpoint)#}
+{#                        if old_func is not None and old_func != view_func:#}
+{#                            raise AssertionError('View function mapping is overwriting an '#}
+{#                            'existing endpoint function: %s' % endpoint)#}
+{#                        self.view_functions[endpoint] = view_func#}
+{##}
+{#                def route(self, rule, **options):#}
+{#                    def decorator(f):#}
+{#                        endpoint = options.pop('endpoint', None)#}
+{#                        self.add_url_rule(rule, endpoint, f, **options)#}
+{#                        return f#}
+{#                    return decorator#}
+{##}
+{#            </code></pre>#}
+
+            <p><a href="{{ url_for('static', filename='flask/app.py') }}"><code>app.py</code></a></p>
+
+            <br>
+
+            <code>werkzeug.routing.Rule</code>
+
+            <pre><code class="python">
+                def match_compare_key(self):
+                    return bool(self.arguments), -len(self._weights), self._weights
+
+            </code></pre>
+
+            <pre><code class="python">
+
+                def build_compare_key(self):
+                    return self.alias and 1 or 0, -len(self.arguments), -len(self.defaults or ())
+            </code></pre>
+
+            <pre><code class="python">
+                def update(self):
+                    if not self._remap:
+                        return
+
+                    with self._remap_lock:
+                        if not self._remap:
+                            return
+
+                        self._rules.sort(key=lambda x: x.match_compare_key())
+                        for rules in itervalues(self._rules_by_endpoint):
+                            rules.sort(key=lambda x: x.build_compare_key())
+                        self._remap = False
+
+            </code></pre>
+
+            <p><code>Rule.match_compare_key()</code>, <code>Rule.build_compare_key()</code> is only used in <code>Rule.update()</code>
+            </p>
+
+            </div>
+
+            <div>
+                <h2>Fix</h2>
+
+                <p>In <code>Flask.add_url_rule</code> add a parameter to specify if the rule should be prioritized or not.</p>
+
+                <pre><code class="python">
+                    # # increase probability that the rule will be near or at the top
+                    # top_compare_key = False, -100, [(-2, 0)]
+                    # # increase probability that the rule will be near or at the bottom
+                    # bottom_compare_key = True, 100, [(2, 0)]
+                    def route(self, *args, **kwargs):
+                        def decorator(view_func):
+                            compare_key = kwargs.pop('compare_key', None)
+                            # register view_func with route
+                            self.route(*args, **kwargs)(view_func)
+
+                            if compare_key is not None:
+                                rule = self.url_map._rules[-1]
+                                rule.match_compare_key = lambda: compare_key
+
+                            return view_func
+                        return decorator
+                </code></pre>
+
+
+            </div>
+
+
+
+
+        </div>
+
+        <p><code>werkzeug</code><code>Rule.match_compare_key</code> and <code>Rule.match_compare_key</code></p>
+
+
+    </div>
 {% endblock %}

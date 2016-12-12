@@ -32,5 +32,9 @@ def enhancement():
 def summary():
     return render_template('summary.html')
 
+@app.route('/<arg1>/<arg2>/<arg3>/')
+def arg3(arg1, arg2, arg3):
+    return arg1 + " "  + arg2 + " " + arg3
+
 if __name__ == '__main__':
     app.run()
