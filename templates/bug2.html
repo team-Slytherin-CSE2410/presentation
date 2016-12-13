@@ -15,11 +15,11 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-return render_template('index.html')
+    return render_template('index.html')
 
 @app.route('/&#60;arg1&#62;/&#60;arg2&#62;/&#60;arg3&#62;/')
 def arg3(arg1, arg2, arg3):
-return arg1 + " " + arg2 + " " + arg3
+    return arg1 + " " + arg2 + " " + arg3
 
 if __name__ == '__main__':
     app.run()
