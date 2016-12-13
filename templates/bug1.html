@@ -1,4 +1,97 @@
 {% extends "template.html" %}
 {% block body %}
-  bug1
+    <div class="row">
+        <h1><a href="https://github.com/pallets/flask/issues/1829">[Errno 2] No such file or directory" on flask run with FLASK_DEBUG=1
+            <strong>#1829</strong></a></h1>
+
+        <div>
+            <h2>What is the bug?</h2>
+          <pre><code class="python">
+              C:\Users\Fer Ben\PycharmProjects\flask>python -c "import helloWorld"
+                this is the version we copied from github
+
+              C:\Users\Fer Ben\PycharmProjects\flask>set FLASK_APP=helloWorld.py
+
+              C:\Users\Fer Ben\PycharmProjects\flask>flask run
+               * Serving Flask app "helloWorld"
+               * Forcing debug mode off
+               * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+
+              C:\Users\Fer Ben\PycharmProjects\flask>set FLASK_DEBUG=1
+
+              C:\Users\Fer Ben\PycharmProjects\flask>flask run
+               * Serving Flask app "helloWorld"
+               * Forcing debug mode on
+               * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+               * Restarting with windowsapi reloader
+              C:\Users\Fer Ben\PycharmProjects\flask\python.exe: can't open file
+              'C:\Users\Fer Ben\AppData\Local\Programs\Python\Python35-32\Scripts\flask':
+              [Errno 2] No such file or directory
+
+          </code></pre>
+
+
+            <p>Flask is unable to find the Flask app file since it looks for it in the folder named “Scripts” instead. Why does it do this? Well,
+              the answer to that is it’s currently looking for a script called “flask” but in Windows it is named as “flask.exe”.</p>
+        </div>
+
+
+        <div>
+            <h2>Concept Location</h2>
+            <p> need to insert pics - fernando</p>
+
+
+            <div>
+            </div>
+
+                <h2>Fix</h2>
+
+                <p>Possible Solutions:</p>
+                      <p>   1.	Run as a module using “python -m flask run” (not really a fix, just a user workaround)</p>
+                      <p>   2.	Implementation of a batch file (I chose this one)</p>
+                      <p>   3.	Fix the reloader in an external library “werkzeug” that flask utilizes (messing with a library could make the matter worse or even cause additional problems)
+                      </p>
+
+              <p>I located the area in scripts where Flask script was being called and created a simple batch file to run the exe whenever flask is called by name that batch file “flask”.</p>
+              <p>Adding the batch file to the script folder.</p>
+              <p>Now the issue became as to how could I include my fix to share with the developers? I started thinking about adding documentation to the beginner guide on how to start run flask but…
+                  Before that could happen however, I was trying to replicate the bug again after having made a fresh install on my desktop of Python, Pycharm, Flask and all of its modules that the bug was fixed. To my surprise, I realized that the werkzeug external library had been updated and used stat reloader instead of windowsapi. The update came when the default polling reloader used was very inaccurate and its replacement instead was watchdog. However, since I did not have the watchdog reloader installed, the program defaulted to using the stat reloader.
+
+                  I communicated with one of the developers and the following corresponding ensued:
+              </p>
+
+
+          <pre><code class="python">
+              C:\Users\Fer Ben\PycharmProjects\flask>python -c "import helloWorld"
+                this is the version we copied from github
+
+              C:\Users\Fer Ben\PycharmProjects\flask>set FLASK_APP=helloWorld.py
+
+              C:\Users\Fer Ben\PycharmProjects\flask>flask run
+               * Serving Flask app "helloWorld"
+               * Forcing debug mode off
+               * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+
+              C:\Users\Fer Ben\PycharmProjects\flask>set FLASK_DEBUG=1
+
+              C:\Users\Fer Ben\PycharmProjects\flask>flask run
+               * Serving Flask app "helloWorld"
+               * Forcing debug mode on
+               * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+               * Restarting with stat
+               * Debugger is active!
+               * Debugger pin code: 587-098-370
+
+          </code></pre>
+            </div>
+
+
+
+
+        </div>
+
+
+
+
+    </div>
 {% endblock %}
