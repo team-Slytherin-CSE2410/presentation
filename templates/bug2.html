@@ -21,6 +21,9 @@ return render_template('index.html')
 def arg3(arg1, arg2, arg3):
 return arg1 + " " + arg2 + " " + arg3
 
+if __name__ == '__main__':
+    app.run()
+
           </code></pre>
 
 
@@ -186,6 +189,9 @@ def arg3(arg1, arg2, arg3):
 @app.route('/&#60;arg1&#62;/&#60;arg2&#62;/&#60;arg3&#62;/&#60;arg4&#62;', compare_key = Flask.BOTTOM_COMPARE_KEY)
 def arg_4(arg1, arg2, arg3, arg4):
     return arg1 + " "  + arg2 + " " + arg3 + " " + arg4
+
+if __name__ == '__main__':
+    app.run()
 
                 </code></pre>
 
