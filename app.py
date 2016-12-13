@@ -1,5 +1,4 @@
 from flask import Flask, render_template
-
 app = Flask(__name__)
 
 
@@ -33,8 +32,12 @@ def summary():
     return render_template('summary.html')
 
 @app.route('/<arg1>/<arg2>/<arg3>/')
-def arg3(arg1, arg2, arg3):
-    return arg1 + " "  + arg2 + " " + arg3
+def arg_3(arg1, arg2, arg3):
+    return arg1 + " " + arg2 + " " + arg3
+
+@app.route('/<arg1>/<arg2>/<arg3>/<arg4>', compare_key = Flask.BOTTOM_COMPARE_KEY)
+def arg_4(arg1, arg2, arg3, arg4):
+    return arg1 + " " + arg2 + " " + arg3 + " " + arg4
 
 if __name__ == '__main__':
     app.run()
