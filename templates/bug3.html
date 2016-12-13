@@ -48,8 +48,11 @@ if __name__ == '__main__':
 
                   <p>My solution: determine if error is of exact type socket.error. Operating system vs. server. Checking which version of python is being run. See images below.
                   </p>
+            <img src="{{ url_for('static', filename="img/img/1995_attempt_1.png") }}" style="display:block; margin: 0 auto;width:80%;"/>
+            <br>
+            <img src="{{ url_for('static', filename="img/img/1995_attempt_2.png") }}" style="display:block; margin: 0 auto;width:80%;"/>
 
-                  <p>Both of my attempts did not work. In this case it was that the Werkzeug library overloaded the server causing it to fail.  This means that the issue was not in Flask but in an external library that Flask calls.
+                  <p>Did not work. In this case it was that the Werkzeug library overloaded the server causing it to fail.  This means that the issue was not in Flask but in an external library that Flask calls.
                   </p>
 
                     <p>   - Issue in the Werkzeug library:  while waiting for the Werkzeug server to respond, NGINX closes itself off from the library. So when a python program tries to respond and exception occurs.  Documented as an issue in pallets/Werkzeug. #954.
