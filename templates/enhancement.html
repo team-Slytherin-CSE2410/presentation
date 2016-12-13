@@ -1,4 +1,96 @@
 {% extends "template.html" %}
 {% block body %}
-  enhancement
+  <div class="row">
+    <h1><a href="https://github.com/pallets/flask/issues/1289">bad content-length default #1289</a></h1>
+
+    <div>
+        <h2>What is the enhancement?</h2>
+        <img src="{{ url_for('static', filename="enhancement.png") }}" style="width:100%;"/>
+        <img src="{{ url_for('static', filename="enhancement2.jpg") }}" style="width:100%;"/>
+    </div>
+
+    <div>
+        <h2>Concept Location</h2>
+        <code>grep -r "CONTENT_LENGTH" *</code>
+
+        <br>
+
+        <code>Werkzeug.serving.py</code>
+
+        <pre><code class="python">
+environ = {
+            'wsgi.version':         (1, 0),
+            'wsgi.url_scheme':      url_scheme,
+            'wsgi.input':           self.rfile,
+            'wsgi.errors':          sys.stderr,
+            'wsgi.multithread':     self.server.multithread,
+            'wsgi.multiprocess':    self.server.multiprocess,
+            'wsgi.run_once':        False,
+            'werkzeug.server.shutdown': shutdown_server,
+            'SERVER_SOFTWARE':      self.server_version,
+            'REQUEST_METHOD':       self.command,
+            'SCRIPT_NAME':          '',
+            'PATH_INFO':            wsgi_encoding_dance(path_info),
+            'QUERY_STRING':         wsgi_encoding_dance(request_url.query),
+            'CONTENT_TYPE':         self.headers.get('Content-Type', ''),
+            'CONTENT_LENGTH':       self.headers.get('Content-Length', ''),
+            'REMOTE_ADDR':          self.address_string(),
+            'REMOTE_PORT':          self.port_integer(),
+            'SERVER_NAME':          self.server.server_address[0],
+            'SERVER_PORT':          str(self.server.server_address[1]),
+            'SERVER_PROTOCOL':      self.request_version
+        }
+        </code></pre>
+    </div>
+
+    <div>
+        <h2>Fix</h2>
+
+        <div class="row">
+                    <div class="col-lg-6">
+                        <h3>Before</h3>
+                        <pre><code class="python">
+'CONTENT_LENGTH':       self.headers.get('Content-Length', ''),
+                        </code></pre>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <h3>After</h3>
+                        <pre><code class="python">
+'CONTENT_LENGTH':       self.headers.get('Content-Length', 0),
+                        </code></pre>
+                    </div>
+
+        </div>
+    </div>
+
+    <div>
+            <h2>Overall</h2>
+            <div class="row">
+                <div class="col-lg-4">
+                    <h3>Files Inspected</h3>
+
+                    <p>Werkzeug</p>
+                    <ul>
+                        <li>serving.py</li>
+                        <li>wsgi.py</li>
+                        <li>datastructures.py</li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h3>Files Changed</h3>
+                    <ul>
+                        <li>serving.py</li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h3>Lines of Code Changed</h3>
+                    <p>Changed 1 line of code</p>
+                </div>
+
+            </div>
+        </div>
+
+
+  </div>
 {% endblock %}
