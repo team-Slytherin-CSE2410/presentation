@@ -38,7 +38,9 @@ C:\Users\Fer Ben\PycharmProjects\flask\python.exe: can't open file
 
         <div>
             <h2>Concept Location</h2>
-            <img src="{{ url_for('static', filename="img/bug1/conceptlocation1.png") }}" style="display:block; margin: 0 auto;"/>
+            <img src="{{ url_for('static', filename="img/bug1/reloader.PNG") }}" style="display:block; margin: 0 auto;width:100%;"/>
+            <img src="{{ url_for('static', filename="img/bug1/conceptlocation1.png") }}" style="display:block; margin: 0 auto;width:100%;"/>
+            <img src="{{ url_for('static', filename="img/bug1/conceptlocation2.png") }}" style="display:block; margin: 0 auto;width:100%;"/>
 
 
             <div>
@@ -52,6 +54,20 @@ C:\Users\Fer Ben\PycharmProjects\flask\python.exe: can't open file
                       <p>   3.	Fix the reloader in an external library “werkzeug” that flask utilizes (messing with a library could make the matter worse or even cause additional problems)
                       </p>
 
+                <p>batch implementation</p>
+            <br>
+            <img src="{{ url_for('static', filename="img/bug1/withoutbatch.PNG") }}" style="display:block; margin: 0 auto;width:100%;"/>
+            <br>
+            <br>
+            <img src="{{ url_for('static', filename="img/bug1/flaskbatch.PNG") }}" style="display:block; margin: 0 auto;width:100%;"/>
+            <br>
+            <br>
+            <img src="{{ url_for('static', filename="img/bug1/withbatch.PNG") }}" style="display:block; margin: 0 auto;width:100%;"/>
+            <br>
+            <br>
+
+
+
               <p>I located the area in scripts where Flask script was being called and created a simple batch file to run the exe whenever flask is called by name that batch file “flask”.</p>
               <p>Adding the batch file to the script folder.</p>
               <p>Now the issue became as to how could I include my fix to share with the developers? I started thinking about adding documentation to the beginner guide on how to start run flask but…
@@ -59,6 +75,13 @@ C:\Users\Fer Ben\PycharmProjects\flask\python.exe: can't open file
 
                   I communicated with one of the developers and the following corresponding ensued:
               </p>
+
+            <img src="{{ url_for('static', filename="img/bug1/commwithdev.PNG") }}" style="display:block; margin: 0 auto;width:100%;"/>
+            <br>
+            <br>
+            <img src="{{ url_for('static', filename="img/bug1/commwithdev2.PNG") }}" style="display:block; margin: 0 auto;width:100%;"/>
+            <br>
+            <br>
 
 
           <pre><code class="python">
